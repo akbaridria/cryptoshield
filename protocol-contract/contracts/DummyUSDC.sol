@@ -5,10 +5,10 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract MyToken is ERC20, ERC20Burnable, Ownable {
-    constructor(address initialOwner)
+contract DummyUsdc is ERC20, ERC20Burnable, Ownable {
+    constructor()
         ERC20("Dummy USDC", "dUSDC")
-        Ownable(initialOwner)
+        Ownable(msg.sender)
     {
       _mint(msg.sender, 10000000 * 10 ** decimals());
     }

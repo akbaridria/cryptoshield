@@ -1,4 +1,42 @@
 {
+  "networkDetail": {
+    "ethereum": {
+      "chainId": 11155111,
+      "currencySymbol": "ETH",
+      "rpc": "https://rpc.sepolia.org",
+      "chainlink": {
+        "linkToken": "0x779877A7B0D9E8603169DdbD7836e478b4624789",
+        "regstrarAutomation": "0xb0E49c5D0d05cbc241d68c05BC5BA1d1B7B72976"
+      },
+      "DummyUsdc": "0x69455C0E43407e5183eB2074247b2e10f3f3D301",
+      "UpKeep": "0x3f25D6b0948B3ED9617BAAdB80dBbEfE2D34002C",
+      "ShieldHub": "0xa4b6bdFca60841A3711a16398dd7bF802aCbfbDf"
+    },
+    "polygon": {
+      "chainId": 80001,
+      "currencySymbol": "MATIC",
+      "rpc": "https://rpc-mumbai.maticvigil.com",
+      "chainlink": {
+        "linkToken": "0x326C977E6efc84E512bB9C30f76E30c160eD06FB",
+        "regstrarAutomation": "0xb58E509b59538256854b2a223289160F83B23F92"
+      },
+      "DummyUsdc": "0x69455C0E43407e5183eB2074247b2e10f3f3D301",
+      "UpKeep": "0x53dBBE3Fd66d328FfFeB663288CE1407381501D6",
+      "ShieldHub": "0xc34f351Ff85707218e7CeF6644B877F855593e14"
+    },
+    "avalanche": {
+      "chainId": 43113,
+      "currencySymbol": "AVAX",
+      "rpc": "https://api.avax-test.network/ext/bc/C/rpc",
+      "chainlink": {
+        "linkToken": "0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846",
+        "regstrarAutomation": "0xD23D3D1b81711D75E1012211f1b65Cc7dBB474e2"
+      },
+      "DummyUsdc": "0xc3d96C75d3739BF7C0BEAeAddEc30a542f714Bb2",
+      "UpKeep": "0x1a2C263C3fbc6a39653c9c9cdDBba5ee896293B9",
+      "ShieldHub": "0xc8698A98e6477D7D197E3Ef7D106497eAa267790"
+    }
+  },
   "dataFeed": {
     "nft": {
       "ethereum": [

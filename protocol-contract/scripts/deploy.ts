@@ -1,22 +1,22 @@
-import { ethers } from "hardhat";
+import { ethers, network } from "hardhat";
+import datas from '../datas/contracts.json';
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
+  // 1. deploy dummy usdc
+  // const dUsdc = await ethers.deployContract("DummyUsdc");
+  // await dUsdc.waitForDeployment();
+  // console.log("deploy dummy usdc at ", dUsdc.target);
 
-  const lockedAmount = ethers.parseEther("0.001");
+  // 2. deploy upkeep
+  const upkeep = await ethers.deployContract("UpkeepIDConditional", [datas.networkDetail.avalanche.chainlink.linkToken, datas.networkDetail.avalanche.chainlink.regstrarAutomation]);
+  await upkeep.waitForDeployment();
+  console.log("deploy upkeep at ", upkeep.target);
 
-  const lock = await ethers.deployContract("Lock", [unlockTime], {
-    value: lockedAmount,
-  });
-
-  await lock.waitForDeployment();
-
-  console.log(
-    `Lock with ${ethers.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.target}`
-  );
+  // 3. deploy shieldhub
+  const shieldhub = await ethers.deployContract("ShieldHub", [datas.networkDetail.avalanche.DummyUsdc, upkeep.target]);
+  await shieldhub.waitForDeployment();
+  console.log("deploy shieldhub at ", shieldhub.target);
+  
 }
 
 // We recommend this pattern to be able to use async/await everywhere

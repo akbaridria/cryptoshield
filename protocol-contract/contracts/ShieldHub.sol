@@ -18,6 +18,9 @@ contract ShieldHub is Ownable, ReentrancyGuard  {
 
   uint256 public orderNumbers;
   uint256 public totalCurrentPremium;
+  uint256 aMonth = 30 * 24 * 60 * 60;
+  uint256 public totalUnrealizedCoverAmount;
+  uint256 public totalClaimed;
 
   mapping(uint256 => Types.Order) public orderTracker;
   mapping(address => uint256[]) public userOrders; 
@@ -36,10 +39,9 @@ contract ShieldHub is Ownable, ReentrancyGuard  {
   // constructor
 
   constructor(
-    address initialOwner,
     address dUsdc,
     address upkeep
-  ) Ownable(initialOwner){
+  ) Ownable(msg.sender){
     erc20 = IERC20(dUsdc);
     upKeep = UpkeepIDConditional(upkeep);
   }
@@ -49,9 +51,7 @@ contract ShieldHub is Ownable, ReentrancyGuard  {
     string memory market,
     uint256 premium,
     uint256 iType,
-    int strikePrice,
-    uint256 cover,
-    uint256 expireTime
+    int strikePrice
   ) external nonReentrant() {
     // 1. validation
     require(premium > 0, "premiums should be higher than 0");
@@ -71,6 +71,13 @@ contract ShieldHub is Ownable, ReentrancyGuard  {
 
     // 3.2 get price
     (, int price, ) = feedConsumer.getLatestRoundData();
+    uint256 cover = calculateCoverAmount(premium, uint256(strikePrice), uint256(price));
+
+    if(cover > erc20.balanceOf(address(this)) - totalUnrealizedCoverAmount) {
+      revert("max limit has achieved");
+    }
+
+    totalUnrealizedCoverAmount += cover;
 
     // 3.3 store order
     orderTracker[orderNumbers] = Types.Order({
@@ -82,25 +89,25 @@ contract ShieldHub is Ownable, ReentrancyGuard  {
       price: price,
       strikePrice: strikePrice,
       coverAmount: cover,
-      expireTime: expireTime,
+      expireTime: block.timestamp + aMonth,
       status: Types.StatusInsurance(0),
       orderNumber: orderNumbers
     });
     userOrders[msg.sender].push(orderNumbers);
 
     // 4. create automation
-    ContractTracker contractTracker = new ContractTracker(orderTracker[orderNumbers], address(feedConsumer));
+    ContractTracker contractTracker = new ContractTracker(orderNumbers, address(feedConsumer));
 
     Types.RegistrationParams memory params = Types.RegistrationParams({
       name: "automation",
-      encryptedEmail: "0x",
+      encryptedEmail: "",
       upkeepContract: address(contractTracker),
       gasLimit: 1000000,
       adminAddress: owner(),
       triggerType: 0,
-      checkData: "0x",
-      triggerConfig: "0x",
-      offchainConfig: "0x",
+      checkData: "",
+      triggerConfig: "",
+      offchainConfig: "",
       amount: 2 * 1e18
     });
 
@@ -113,10 +120,12 @@ contract ShieldHub is Ownable, ReentrancyGuard  {
 
   function redeemInsurace(
     uint256 orderNumber
-  ) external nonReentrant() orderExist(orderNumber) {
+  ) external orderExist(orderNumber) {
     // 1. validation
-    if(orderTracker[orderNumber].expireTime > block.timestamp) {
+    if(orderTracker[orderNumber].expireTime < block.timestamp) {
       orderTracker[orderNumber].status = Types.StatusInsurance(2);
+      totalCurrentPremium = totalCurrentPremium - orderTracker[orderNumber].amount;
+      totalUnrealizedCoverAmount = totalUnrealizedCoverAmount - orderTracker[orderNumber].coverAmount;
     }
 
     // 2. execute
@@ -128,6 +137,10 @@ contract ShieldHub is Ownable, ReentrancyGuard  {
 
       // 2.3 change status insurance
       orderTracker[orderNumber].status = Types.StatusInsurance(1);
+      totalCurrentPremium = totalCurrentPremium - orderTracker[orderNumber].amount;
+      totalUnrealizedCoverAmount = totalUnrealizedCoverAmount - orderTracker[orderNumber].coverAmount;
+      totalClaimed += orderTracker[orderNumber].coverAmount;
+
       // 2.4 emit event
       emit Claimed(orderTracker[orderNumber].policyHolder, orderTracker[orderNumber].iType, orderTracker[orderNumber].market, orderTracker[orderNumber].coverAmount);
     }
@@ -153,6 +166,20 @@ contract ShieldHub is Ownable, ReentrancyGuard  {
       t[i] = orderTracker[userOrders[user][i]];
     }
     return t;
+  }
+
+  function calculateCoverAmount(
+    uint256 premium, 
+    uint256 strikePrice,
+    uint256 currentPrice
+  ) public view returns (uint256) {
+    return (((currentPrice - strikePrice) * 100) / currentPrice) * premium;
+  }
+
+  function getOrderByNumber(
+    uint256 number
+  ) public view returns (Types.Order memory) {
+    return orderTracker[number];
   }
 
   // admin function
