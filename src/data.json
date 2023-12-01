@@ -12,5 +12,15 @@
       "question": "How does Cryptoshield utilize Chainlink's oracle network?",
       "answer": "Chainlink's oracle network provides secure and reliable price feeds, enabling Cryptoshield to accurately assess market conditions and trigger insurance payouts accordingly."
     }
+  ],
+  "menus": [
+    {
+      "name": "Home",
+      "link": "/"
+    },
+    {
+      "name": "Explore",
+      "link": "/explore"
+    }
   ]
 }

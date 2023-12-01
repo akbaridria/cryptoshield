@@ -1,5 +1,12 @@
-import type { Menus } from "./types"
-import { Gear,CursorArrowRays, Bolt } from "./components/Icons"
+import type { Menus, IAccountSubMenu } from "./types"
+import { 
+  Gear,
+  CursorArrowRays, 
+  Bolt, 
+  Liquidity,
+  ArrowDiagonalSquare,
+  ArrowSquare
+} from "./components/Icons"
 
 export const listBenefit = () : Menus[] => {
   return [
@@ -17,6 +24,23 @@ export const listBenefit = () : Menus[] => {
       title: 'User-Friendly Interface',
       description: 'An intuitive platform makes it easy for users to set preferences and manage their insurance coverage seamlessly.',
       icon: CursorArrowRays({ customClass: "w-12 h-12 stroke-primary"})
+    }
+  ]
+}
+
+export const listSubMenuAccount = ():IAccountSubMenu[] => {
+  return [
+    {
+      name: "Your Cover",
+      icon: Liquidity({ customClass: 'w-4 h-4 stroke-base-content'})
+    },
+    {
+      name: "View In Explorer",
+      icon: ArrowDiagonalSquare({ customClass: 'w-4 h-4 stroke-white'})
+    },
+    {
+      name: "Disconnect",
+      icon: ArrowSquare({ customClass: 'w-4 h-4 stroke-base-content rotate-[180deg]'})
     }
   ]
 }
