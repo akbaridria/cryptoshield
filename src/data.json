@@ -1,0 +1,16 @@
+{
+  "faq": [
+    {
+      "question": "What types of digital assets does Cryptoshield cover?",
+      "answer": "Cryptoshield provides coverage for a wide range of digital assets, including tokens, NFTs, and cryptocurrencies."
+    },
+    {
+      "question": "How does Cryptoshield's automated claims processing work?",
+      "answer": "Chainlink's automation tools continuously monitor market conditions and trigger claims payouts when predefined strike prices are reached, ensuring swift and efficient compensation."
+    },
+    {
+      "question": "How does Cryptoshield utilize Chainlink's oracle network?",
+      "answer": "Chainlink's oracle network provides secure and reliable price feeds, enabling Cryptoshield to accurately assess market conditions and trigger insurance payouts accordingly."
+    }
+  ]
+}
