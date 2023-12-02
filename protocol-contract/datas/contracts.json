@@ -97,78 +97,72 @@
           "decimal": 18,
           "image": "azuki.avif"
         }
-      ]
+      ],
+      "avalanche": []
     },
     "assets": {
       "ethereum": [
         {
           "contractName": "BTC / USD",
-          "contractAddres": "0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43",
+          "contractAddress": "0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43",
           "heartbeat": 3600,
           "decimal": 8,
           "image": "btc.svg"
         },
         {
           "contractName": "DAI / USD",
-          "contractAddres": "0x14866185B1962B63C3Ea9E03Bc1da838bab34C19",
+          "contractAddress": "0x14866185B1962B63C3Ea9E03Bc1da838bab34C19",
           "heartbeat": 86400,
           "decimal": 8,
           "image": "dai.svg"
         },
         {
           "contractName": "ETH / USD",
-          "contractAddres": "0x694AA1769357215DE4FAC081bf1f309aDC325306",
+          "contractAddress": "0x694AA1769357215DE4FAC081bf1f309aDC325306",
           "heartbeat": 3600,
           "decimal": 8,
           "image": "eth.svg"
         },
         {
           "contractName": "LINK / USD",
-          "contractAddres": "0xc59E3633BAAC79493d908e63626716e204A45EdF",
+          "contractAddress": "0xc59E3633BAAC79493d908e63626716e204A45EdF",
           "heartbeat": 3600,
           "decimal": 8,
           "image": "link.svg"
         },
         {
           "contractName": "SNX / USD",
-          "contractAddres": "0xc0F82A46033b8BdBA4Bb0B0e28Bc2006F64355bC",
+          "contractAddress": "0xc0F82A46033b8BdBA4Bb0B0e28Bc2006F64355bC",
           "heartbeat": 3600,
           "decimal": 8,
           "image": "snx.svg"
-        },
-        {
-          "contractName": "USDC / USD",
-          "contractAddres": "0xA2F78ab2355fe2f984D808B5CeE7FD0A93D5270E",
-          "heartbeat": 86400,
-          "decimal": 8,
-          "image": "usdc.svg"
         }
       ],
       "polygon": [
         {
           "contractName": "BTC / USD",
-          "contractAddres": "0x007A22900a3B98143368Bd5906f8E17e9867581b",
+          "contractAddress": "0x007A22900a3B98143368Bd5906f8E17e9867581b",
           "heartbeat": 120,
           "decimal": 8,
           "image": "btc.svg"
         },
         {
           "contractName": "ETH / USD",
-          "contractAddres": "0x0715A7794a1dc8e42615F059dD6e406A6594651A",
+          "contractAddress": "0x0715A7794a1dc8e42615F059dD6e406A6594651A",
           "heartbeat": 120,
           "decimal": 8,
           "image": "eth.svg"
         },
         {
           "contractName": "MATIC / USD",
-          "contractAddres": "0xd0D5e3DB44DE05E9F294BB0a3bEEaF030DE24Ada",
+          "contractAddress": "0xd0D5e3DB44DE05E9F294BB0a3bEEaF030DE24Ada",
           "heartbeat": 120,
           "decimal": 8,
           "image": "matic.svg"
         },
         {
           "contractName": "LINK / USD",
-          "contractAddres": "0x1C2252aeeD50e0c9B64bDfF2735Ee3C932F5C408",
+          "contractAddress": "0x1C2252aeeD50e0c9B64bDfF2735Ee3C932F5C408",
           "heartbeat": 120,
           "decimal": 8,
           "image": "link.svg"
@@ -177,28 +171,28 @@
       "avalanche": [
         {
           "contractName": "AVAX / USD",
-          "contractAddres": "0x5498BB86BC934c8D34FDA08E81D444153d0D06aD",
+          "contractAddress": "0x5498BB86BC934c8D34FDA08E81D444153d0D06aD",
           "heartbeat": 600,
           "decimal": 8,
           "image": "avax.svg"
         },
         {
           "contractName": "BTC / USD",
-          "contractAddres": "0x31CF013A08c6Ac228C94551d535d5BAfE19c602a",
+          "contractAddress": "0x31CF013A08c6Ac228C94551d535d5BAfE19c602a",
           "heartbeat": 86400,
           "decimal": 8,
           "image": "btc.svg"
         },
         {
           "contractName": "ETH / USD",
-          "contractAddres": "0x86d67c3D38D2bCeE722E601025C25a575021c6EA",
+          "contractAddress": "0x86d67c3D38D2bCeE722E601025C25a575021c6EA",
           "heartbeat": 86400,
           "decimal": 8,
           "image": "eth.svg"
         },
         {
           "contractName": "USDT / USD",
-          "contractAddres": "0x7898AcCC83587C3C55116c5230C17a6Cd9C71bad",
+          "contractAddress": "0x7898AcCC83587C3C55116c5230C17a6Cd9C71bad",
           "heartbeat": 86400,
           "decimal": 8,
           "image": "usdt.svg"

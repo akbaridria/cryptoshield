@@ -12,7 +12,7 @@ export const listBenefit = () : Menus[] => {
   return [
     {
       title: 'Automatic Protection',
-      description: 'Using Chainlink price feeds, CryptoShield automates insurance triggers based on predefined thresholds, securing your assets without manual intervention.',
+      description: 'Using Chainlink Automation, CryptoShield automates insurance triggers based on predefined thresholds, securing your assets without manual intervention.',
       icon: Gear({ customClass: "w-12 h-12 stroke-primary"})
     },
     {
@@ -36,7 +36,7 @@ export const listSubMenuAccount = ():IAccountSubMenu[] => {
     },
     {
       name: "View In Explorer",
-      icon: ArrowDiagonalSquare({ customClass: 'w-4 h-4 stroke-white'})
+      icon: ArrowDiagonalSquare({ customClass: 'w-4 h-4 stroke-base-content'})
     },
     {
       name: "Disconnect",

@@ -23,10 +23,14 @@
       "link": "/explore"
     }
   ],
-  "listNetwork" : {
+  "listNetworkImage" : {
     "Sepolia" : "eth.svg",
     "Polygon Mumbai" : "matic.svg",
     "Avalanche Fuji" : "avax.svg"
+  },
+  "listNetworkKey" : {
+    "Sepolia" : "ethereum",
+    "Polygon Mumbai" : "polygon",
+    "Avalanche Fuji" : "avalanche"
   }
-
 }
