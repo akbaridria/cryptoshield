@@ -25,12 +25,7 @@ export const Explore = () => {
       </div>
 
       <div className="container mx-auto p-6">
-        <div className='flex items-center justify-between'>
-          <Tabs listab={tabs} tabname={activeTab} setTab={setActiveTab} />
-          <button className='btn btn-outline btn-sm'>
-            Your cover
-          </button>
-        </div>
+        <Tabs listab={tabs} tabname={activeTab} setTab={setActiveTab} />
         <div className="my-10">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {

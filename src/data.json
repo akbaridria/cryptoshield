@@ -22,5 +22,11 @@
       "name": "Explore",
       "link": "/explore"
     }
-  ]
+  ],
+  "listNetwork" : {
+    "Sepolia" : "eth.svg",
+    "Polygon Mumbai" : "matic.svg",
+    "Avalanche Fuji" : "avax.svg"
+  }
+
 }

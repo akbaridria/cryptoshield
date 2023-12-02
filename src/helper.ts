@@ -44,3 +44,7 @@ export const listSubMenuAccount = ():IAccountSubMenu[] => {
     }
   ]
 }
+
+export const trimWallet = (v: string) => {
+  return v.slice(0, 6) + '...' + v.slice(-4)
+}
