@@ -4,12 +4,13 @@ import { ICardAsset, ICardNFT, ITabs, ListAssets } from '@/types';
 import datas from '../../../protocol-contract/datas/contracts.json';
 import { listNetworkKey } from '@/data.json'
 import { useEffect, useState } from "react";
-import { useNetwork } from 'wagmi';
-import { EmptyState } from '@/components/Icons';
+import { useAccount, useNetwork } from 'wagmi';
+import { DisconnectWallet, EmptyState } from '@/components/Icons';
 
 export const Explore = () => {
   const tabs = ['Assets', 'NFTs'];
   const { chain } = useNetwork()
+  const { isConnected } = useAccount()
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [listAssets, setListAssets] = useState<ListAssets[]>([]);
   const [listNFTs, setListNFTs] = useState<ListAssets[]>([]);
@@ -42,30 +43,44 @@ export const Explore = () => {
 
       <div className="container mx-auto p-6">
         <Tabs listab={tabs} tabname={activeTab} setTab={setActiveTab} />
-        <div className="my-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {
-              activeTab === 'Assets' && listAssets.map((item, index) => {
-                return (
-                  <CardAsset key={`card-asset-${index}`} name={item.contractName} image={`cryptos/${item.image}`} chain={chain?.name as string} />
-                )
-              })
-            }
-
-            {
-              activeTab === "NFTs" && listNFTs.map((item, index) => {
-                return (
-                  <CardNFT key={`card-nft-${index}`} name={item.contractName} image={`cryptos/${item.image}`} chain={chain?.name as string} />
-                )
-              })
-            }
-          </div>
-        </div>
         {
-          ((activeTab === 'Assets' && listAssets.length === 0) || (activeTab === 'NFTs' && listNFTs.length === 0)) && <div className='flex flex-col items-center justify-center w-full -my-10'>
-            <EmptyState />
-            <div className='text-2xl font-bold'>No Market Is Available</div>
-            <div className='opacity-[0.5]'>Seems like there&apos;s no {activeTab} market insurance for this chain</div>
+          isConnected &&
+          <>
+            <div className="my-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {
+                  activeTab === 'Assets' && listAssets.map((item, index) => {
+                    return (
+                      <CardAsset key={`card-asset-${index}`} name={item.contractName} image={`cryptos/${item.image}`} chain={chain?.name as string} />
+                    )
+                  })
+                }
+
+                {
+                  activeTab === "NFTs" && listNFTs.map((item, index) => {
+                    return (
+                      <CardNFT key={`card-nft-${index}`} name={item.contractName} image={`cryptos/${item.image}`} chain={chain?.name as string} />
+                    )
+                  })
+                }
+              </div>
+            </div>
+            {
+              ((activeTab === 'Assets' && listAssets.length === 0) || (activeTab === 'NFTs' && listNFTs.length === 0)) &&
+              <div className='flex flex-col items-center justify-center w-full -my-10'>
+                <EmptyState />
+                <div className='text-2xl font-bold'>No Market Is Available</div>
+                <div className='opacity-[0.5]'>Seems like there&apos;s no {activeTab} market insurance for this chain</div>
+              </div>
+            }
+          </>
+        }
+        {
+          !isConnected &&
+          <div className='flex flex-col items-center justify-center w-full my-10'>
+            <DisconnectWallet />
+            <div className='text-2xl font-bold'>Wallet is not connected</div>
+            <div className='opacity-[0.5]'>Connect your wallet to get started</div>
           </div>
         }
       </div>
@@ -131,6 +146,17 @@ export const Tabs = ({ tabname, listab, setTab }: ITabs) => {
 }
 
 export const ModalBuy = () => {
+  const [value, setValue] = useState('');
+
+  const handleValue = (v: string) => {
+    let filteredValue = v.replace(/[^0-9.]/g, '');
+    let dotCount = (filteredValue.match(/\./g) || []).length;
+    if (dotCount > 1) {
+      filteredValue = filteredValue.replace(/\./g, (match, index) => index === filteredValue.indexOf('.') ? '.' : '');
+    }
+    setValue(filteredValue)
+  }
+
   return (
     <dialog id="modal_buy" className="modal">
       <div className="modal-box">
@@ -161,11 +187,20 @@ export const ModalBuy = () => {
             <div className="label">
               <span className="label-text flex items-center gap-2">
                 <div className='w-5 h-5 bg-primary rounded-full flex items-center justify-center text-xs'>3</div>
+                <div>Expire Time</div>
+              </span>
+            </div>
+            <input type="text" placeholder="Type here" value={"1 Month"} className="input input-ghost input-md w-full" disabled />
+          </label>
+          <label className="form-control w-full my-2">
+            <div className="label">
+              <span className="label-text flex items-center gap-2">
+                <div className='w-5 h-5 bg-primary rounded-full flex items-center justify-center text-xs'>4</div>
                 <div>Strike Price</div>
               </span>
               <span className="label-text-alt">Your balance : 1000</span>
             </div>
-            <input type="text" placeholder="Input Strike Price here" className="input input-ghost input-md bg-[#1c1c1c] focus:outline-none focus:border-none w-full" />
+            <input type="text" placeholder="Input Strike Price here" className="input input-ghost input-md bg-[#1c1c1c] focus:outline-none focus:border-none w-full" value={value} onChange={(v) => handleValue(v.target.value)} />
             <div className="label">
               <span className="label-text-alt"></span>
               <span className="label-text-alt">You will receive $99,000</span>

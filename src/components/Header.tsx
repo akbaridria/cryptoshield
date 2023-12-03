@@ -8,7 +8,7 @@ import datas from '@/data.json';
 import dataContract from '../../protocol-contract/datas/contracts.json';
 import { usePathname } from "next/navigation";
 import { listSubMenuAccount, trimWallet } from "@/helper";
-import { useAccount, useConnect, useNetwork, useSwitchNetwork } from "wagmi";
+import { useAccount, useConnect, useDisconnect, useNetwork, useSwitchNetwork } from "wagmi";
 
 export const Header = () => {
   const { isConnected } = useAccount()
@@ -50,7 +50,7 @@ export const Header = () => {
       </div>
 
       {/* start modal  */}
-      <ModalAccount />
+      { isConnected && <ModalAccount />}
       {/* end modal  */}
     </div>
   )
@@ -58,7 +58,14 @@ export const Header = () => {
 
 export const ButtonUserConnected = () => {
   const { address } = useAccount()
+  const { chain } =  useNetwork();
+  const { disconnect } = useDisconnect();
 
+  const handleClick = (idx: number) => {
+    if(idx === 0) (document.getElementById('modal_account') as HTMLDialogElement)?.showModal();
+    if(idx === 1) window.open(chain?.blockExplorers?.default.url as string + '/address/' + address, '_blank');
+    if(idx === 2) disconnect();
+  }
   return (
     <div className="dropdown dropdown-end">
       <div tabIndex={0} role="button" className="btn btn-outline btn-sm">
@@ -71,7 +78,7 @@ export const ButtonUserConnected = () => {
           listSubMenuAccount().map((item, index) => {
             return (
               <li key={`account-sub-menu-${index}`}>
-                <button className="flex flex-row items-center gap-2" onClick={() => index === 0 ? (document.getElementById('modal_account') as HTMLDialogElement)?.showModal() : null}>
+                <button className="flex flex-row items-center gap-2" onClick={ () => handleClick(index)}>
                   {item.icon}
                   {item.name}
                 </button>
@@ -146,7 +153,6 @@ export const ButtonConnectWallet = () => {
                     <img src={`cryptos/${connector.id}.svg`} alt="" className={`w-4 h-4 ${connector.id === 'coinbaseWallet' ? 'rounded-full' : null}`} />
                     {connector.name}
                   </div>
-                  <div className="w-2 h-2 rounded-full bg-primary"></div>
                 </button>
               </li>
             )
