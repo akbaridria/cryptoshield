@@ -8,12 +8,17 @@ async function main() {
   // console.log("deploy dummy usdc at ", dUsdc.target);
 
   // 2. deploy upkeep
-  const upkeep = await ethers.deployContract("UpkeepIDConditional", [datas.networkDetail.avalanche.chainlink.linkToken, datas.networkDetail.avalanche.chainlink.regstrarAutomation]);
-  await upkeep.waitForDeployment();
-  console.log("deploy upkeep at ", upkeep.target);
+  // const linkToken = datas.networkDetail[network.name as keyof typeof datas.networkDetail].chainlink.linkToken;
+  // const registrar = datas.networkDetail[network.name as keyof typeof datas.networkDetail].chainlink.regstrarAutomation;
+
+  // const upkeep = await ethers.deployContract("UpkeepIDConditional", [linkToken, registrar]);
+  // await upkeep.waitForDeployment();
+  // console.log("deploy upkeep at ", upkeep.target);
 
   // 3. deploy shieldhub
-  const shieldhub = await ethers.deployContract("ShieldHub", [datas.networkDetail.avalanche.DummyUsdc, upkeep.target]);
+  const dUsdc = datas.networkDetail[network.name as keyof typeof datas.networkDetail].DummyUsdc;
+  const upkeep = datas.networkDetail[network.name as keyof typeof datas.networkDetail].UpKeep;
+  const shieldhub = await ethers.deployContract("ShieldHub", [dUsdc, upkeep]);
   await shieldhub.waitForDeployment();
   console.log("deploy shieldhub at ", shieldhub.target);
   

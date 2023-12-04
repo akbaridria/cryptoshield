@@ -15,17 +15,17 @@ const PRIVATE_KEY2 = process.env.PRIVATE_KEY2;
 const config: HardhatUserConfig = {
   solidity: "0.8.20",
   networks: {
-    sepolia: {
+    ethereum: {
       url: datas.networkDetail.ethereum.rpc,
       accounts: [PRIVATE_KEY as string, PRIVATE_KEY2 as string],
       chainId: datas.networkDetail.ethereum.chainId,
     },
-    mumbai: {
+    polygon: {
       url: datas.networkDetail.polygon.rpc,
       accounts: [PRIVATE_KEY as string, PRIVATE_KEY2 as string],
       chainId: datas.networkDetail.polygon.chainId,
     },
-    fuji: {
+    avalanche: {
       url: datas.networkDetail.avalanche.rpc,
       accounts: [PRIVATE_KEY as string, PRIVATE_KEY2 as string],
       chainId: datas.networkDetail.avalanche.chainId,

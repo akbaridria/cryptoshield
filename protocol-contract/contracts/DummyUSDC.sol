@@ -10,7 +10,7 @@ contract DummyUsdc is ERC20, ERC20Burnable, Ownable {
         ERC20("Dummy USDC", "dUSDC")
         Ownable(msg.sender)
     {
-      _mint(msg.sender, 10000000 * 10 ** decimals());
+      _mint(msg.sender, 100000000 * 10 ** decimals());
     }
 
     function faucet(address to) public {

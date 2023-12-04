@@ -148,7 +148,7 @@ contract ShieldHub is Ownable, ReentrancyGuard  {
 
   function checkPrice(
     string memory market
-  ) internal view returns(int) {
+  ) public view returns(int) {
     FeedConsumer feedConsumer = FeedConsumer(marketAddress[market]);
     if(address(feedConsumer) == address(0)) {
       revert("market not exist");
@@ -173,7 +173,11 @@ contract ShieldHub is Ownable, ReentrancyGuard  {
     uint256 strikePrice,
     uint256 currentPrice
   ) public view returns (uint256) {
-    return (((currentPrice - strikePrice) * 100) / currentPrice) * premium;
+    return ((((currentPrice - strikePrice) * 100) / currentPrice) * premium) * 2;
+  }
+
+  function getLimitCover() public view returns (uint256) {
+    return erc20.balanceOf(address(this)) - totalUnrealizedCoverAmount;
   }
 
   function getOrderByNumber(

@@ -38,9 +38,9 @@
         "regstrarAutomation": "0xD23D3D1b81711D75E1012211f1b65Cc7dBB474e2"
       },
       "icon": "avax.svg",
-      "DummyUsdc": "0xc3d96C75d3739BF7C0BEAeAddEc30a542f714Bb2",
-      "UpKeep": "0x1a2C263C3fbc6a39653c9c9cdDBba5ee896293B9",
-      "ShieldHub": "0xc8698A98e6477D7D197E3Ef7D106497eAa267790"
+      "DummyUsdc": "0xFA6d33B2605460405EfD94EeB560aD208c3b62Be",
+      "UpKeep": "0x8Cb676e9643D2b77c18b503AB205C98a58F2A631",
+      "ShieldHub": "0x4efB7b5ECB30142A03B43DB44a4A2c2C326B5f34"
     }
   },
   "dataFeed": {

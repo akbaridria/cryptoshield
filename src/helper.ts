@@ -48,3 +48,7 @@ export const listSubMenuAccount = ():IAccountSubMenu[] => {
 export const trimWallet = (v: string) => {
   return v.slice(0, 6) + '...' + v.slice(-4)
 }
+
+export const formatCurrency = (v: bigint, decimal: number) => {
+  return new Intl.NumberFormat('en',{ minimumFractionDigits: 0, maximumFractionDigits: decimal}).format(Number(v) / (10 ** decimal))
+}

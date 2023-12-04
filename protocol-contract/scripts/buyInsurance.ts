@@ -16,10 +16,12 @@ async function main() {
   // 2. buy insurance
   const shieldhubProvider = await ethers.getContractFactory("ShieldHub");
   const shieldhub = ShieldHub__factory.connect(datas.networkDetail.avalanche.ShieldHub, shieldhubProvider.runner);
-  const price = await getPrice();
-  const strikePrice = price - (2 * 10 ** 8);
+  const price = await shieldhub.checkPrice(datas.dataFeed.assets.avalanche[2].contractName);
+  const strikePrice = price - BigInt(240 * 10 ** 8);
 
-  const txBuy = await shieldhub.buyInsurance(datas.dataFeed.assets.avalanche[0].contractName, amount, 1, strikePrice);
+  const txBuy = await shieldhub.buyInsurance(datas.dataFeed.assets.avalanche[2].contractName, amount, 0, strikePrice, {
+    gasLimit: 1000000
+  });
   await txBuy.wait();
   console.log("buy succes at ", txBuy.hash);
 

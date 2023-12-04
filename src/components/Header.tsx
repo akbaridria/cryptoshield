@@ -2,13 +2,18 @@
 
 import Link from "next/link";
 import { Blockies } from "./Blockies";
-import { Chevron, Shield } from "./Icons";
+import { Chevron, Refresh, Shield } from "./Icons";
 import { Logo } from "./Logo";
 import datas from '@/data.json';
 import dataContract from '../../protocol-contract/datas/contracts.json';
 import { usePathname } from "next/navigation";
-import { listSubMenuAccount, trimWallet } from "@/helper";
+import { formatCurrency, listSubMenuAccount, trimWallet } from "@/helper";
 import { useAccount, useConnect, useDisconnect, useNetwork, useSwitchNetwork } from "wagmi";
+import { useCallback, useEffect, useState } from "react";
+import { readContract } from "@wagmi/core";
+import { ShieldHub__factory } from "../../protocol-contract/typechain-types";
+import { IHistory } from "@/types";
+import moment from 'moment';
 
 export const Header = () => {
   const { isConnected } = useAccount()
@@ -165,6 +170,36 @@ export const ButtonConnectWallet = () => {
 
 export const ModalAccount = () => {
   const { address } = useAccount()
+  const { chain } = useNetwork();
+  
+  const [history, setHistory] = useState<readonly IHistory[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const networkData = dataContract.networkDetail[datas.listNetworkKey[chain?.name as keyof typeof datas.listNetworkKey] as keyof typeof dataContract.networkDetail];
+  const getHistory = useCallback(async () => {
+    setLoading(true)
+    const data = await readContract({
+      abi: ShieldHub__factory.abi,
+      address: networkData.ShieldHub as `0x${string}`,
+      functionName: "getUserFullInfo",
+      args: [address as `0x${string}`]
+    })
+    setHistory(data);
+    setLoading(false);
+  }, [address, networkData.ShieldHub])
+  
+  useEffect(() => {
+    getHistory()
+  }, [getHistory])
+
+  const convertStrikePrice = (v: bigint, i: number, m: string ) => {
+    const d = dataContract.dataFeed[i === 0 ? 'assets' : 'nft']
+    const e = d[datas.listNetworkKey[chain?.name as keyof typeof datas.listNetworkKey] as keyof typeof d]
+    const filterData = e.filter((item) => item.contractName === m)
+    const decimal = filterData.length === 0 ? 8 : filterData[0].decimal;
+    return formatCurrency(v, decimal);
+  }
+
   return (
     <dialog id="modal_account" className="modal">
       <div className="modal-box">
@@ -180,51 +215,64 @@ export const ModalAccount = () => {
             <div className="flex-1 flex flex-col gap-2">
               <div>{trimWallet(address as string)}</div>
               <div className="items-center gap-4 hidden md:flex">
-                <div className="badge badge-accent">Active (1)</div>
-                <div className="badge badge-primary">Claimed (2)</div>
-                <div className="badge badge-neutral">Expired (0)</div>
+                <div className="badge badge-accent">Active ({ history.filter((item) => item.status === 0).length })</div>
+                <div className="badge badge-primary">Claimed ({ history.filter((item) => item.status === 1).length })</div>
+                <div className="badge badge-neutral">Expired ({ history.filter((item) => item.status === 2).length })</div>
               </div>
             </div>
           </div>
           <div className="divider my-4">
             <Shield customClass="w-12 h-12 stroke-base-100 fill-primary" />
           </div>
+          <div className="flex items-center justify-end mb-4">
+            <button className="btn btn-primary btn-sm" onClick={() => getHistory()}>
+              <Refresh customClass={`w-4 h-4 ${loading && 'animate-spin'}`} />
+              <div>Refresh</div>
+            </button>
+          </div>
           <div className="grid grid-cols-1 gap-4 max-h-[300px] overflow-y-auto">
             {
-              'a'.repeat(10).split("").map((item, index) => {
+              history.toReversed().map((item, index) => {
                 return (
                   <div key={index} className="border-[1px] border-base-content/5 rounded-sm p-3 grid grid-cols-1 gap-2 text-sm">
                     <div className="flex items-center justify-between">
                       <div className="opacity-[0.5]">Assets Name</div>
-                      <div>BTC / USD</div>
+                      <div>{ item.market }</div>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="opacity-[0.5]">Strike Price</div>
-                      <div>$35,000</div>
+                      <div>{ convertStrikePrice(item.strikePrice, Number(item.iType), item.market) }</div>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="opacity-[0.5]">Premium Amount</div>
-                      <div>$1,000</div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="opacity-[0.5]">Strike Price</div>
-                      <div>$35,000</div>
+                      <div>{ formatCurrency(item.amount, 18) }</div>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="opacity-[0.5]">Cover Amount</div>
-                      <div>$99,000</div>
+                      <div>{ formatCurrency(item.coverAmount, 18) }</div>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="opacity-[0.5]">Expire Time</div>
-                      <div>Monday</div>
+                      <div>{ moment(Number(item.expireTime) * 1000).format('llll')  }</div>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="opacity-[0.5]">Status</div>
-                      <div className="badge badge-primary">Claimed</div>
+                      {
+                        Number(item.status) === 0 && <div className="badge badge-accent">Active</div>
+                      }
+                      {
+                        Number(item.status) === 1 && <div className="badge badge-primary">Claimed</div>
+                      }
+                      {
+                        Number(item.status) === 2 && <div className="badge badge-neutral">Expired</div>
+                      }
                     </div>
                   </div>
                 )
               })
+            }
+            {
+              history.length === 0 && <div className="text-center text-sm">You dont have any insurance <br /> or try refresh the data with the button above.</div>
             }
           </div>
         </div>
