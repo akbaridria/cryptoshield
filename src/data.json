@@ -24,12 +24,12 @@
     }
   ],
   "listNetworkImage" : {
-    "Sepolia" : "eth.svg",
+    "Goerli" : "eth.svg",
     "Polygon Mumbai" : "matic.svg",
     "Avalanche Fuji" : "avax.svg"
   },
   "listNetworkKey" : {
-    "Sepolia" : "ethereum",
+    "Goerli" : "ethereum",
     "Polygon Mumbai" : "polygon",
     "Avalanche Fuji" : "avalanche"
   }

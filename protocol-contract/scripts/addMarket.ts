@@ -5,7 +5,7 @@ import { ShieldHub__factory } from "../typechain-types";
 async function main() {
 
   const shieldhubProvider = await ethers.getContractFactory("ShieldHub");
-  const shieldhub = ShieldHub__factory.connect(datas.networkDetail.avalanche.ShieldHub, shieldhubProvider.runner);
+  const shieldhub = ShieldHub__factory.connect(datas.networkDetail[network.name as keyof typeof datas.networkDetail].ShieldHub, shieldhubProvider.runner);
   const dataAssets = datas.dataFeed.assets[network.name as keyof typeof datas.dataFeed.assets];
   console.log("Add asset market :")
   console.log("===============================")

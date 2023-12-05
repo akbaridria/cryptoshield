@@ -8,13 +8,14 @@ export interface ICardAsset {
   image: string;
   name: string;
   chain: string;
-  setMarket: ({ price, market, assetType, decimal}: FormBuy) => void
+  setMarket: ({ price, market, assetType, decimal}: FormBuy) => void;
 }
 
 export interface ICardNFT {
   image: string;
   name: string;
   chain: string;
+  setMarket: ({ price, market, assetType, decimal}: FormBuy) => void;
 }
 
 export interface ListAssets {

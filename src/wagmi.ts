@@ -1,12 +1,12 @@
-import { configureChains, createConfig, sepolia } from 'wagmi'
-import { avalancheFuji, polygonMumbai } from 'wagmi/chains'
+import { configureChains, createConfig } from 'wagmi'
+import { avalancheFuji, goerli, polygonMumbai } from 'wagmi/chains'
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 
 import { publicProvider } from 'wagmi/providers/public'
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [sepolia, polygonMumbai, avalancheFuji],
+  [polygonMumbai, avalancheFuji],
   [publicProvider()],
 )
 

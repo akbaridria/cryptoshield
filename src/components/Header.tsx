@@ -9,7 +9,7 @@ import dataContract from '../../protocol-contract/datas/contracts.json';
 import { usePathname } from "next/navigation";
 import { formatCurrency, listSubMenuAccount, trimWallet } from "@/helper";
 import { useAccount, useConnect, useDisconnect, useNetwork, useSwitchNetwork } from "wagmi";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { readContract } from "@wagmi/core";
 import { ShieldHub__factory } from "../../protocol-contract/typechain-types";
 import { IHistory } from "@/types";
@@ -55,7 +55,7 @@ export const Header = () => {
       </div>
 
       {/* start modal  */}
-      { isConnected && <ModalAccount />}
+      {isConnected && <ModalAccount />}
       {/* end modal  */}
     </div>
   )
@@ -63,13 +63,13 @@ export const Header = () => {
 
 export const ButtonUserConnected = () => {
   const { address } = useAccount()
-  const { chain } =  useNetwork();
+  const { chain } = useNetwork();
   const { disconnect } = useDisconnect();
 
   const handleClick = (idx: number) => {
-    if(idx === 0) (document.getElementById('modal_account') as HTMLDialogElement)?.showModal();
-    if(idx === 1) window.open(chain?.blockExplorers?.default.url as string + '/address/' + address, '_blank');
-    if(idx === 2) disconnect();
+    if (idx === 0) (document.getElementById('modal_account') as HTMLDialogElement)?.showModal();
+    if (idx === 1) window.open(chain?.blockExplorers?.default.url as string + '/address/' + address, '_blank');
+    if (idx === 2) disconnect();
   }
   return (
     <div className="dropdown dropdown-end">
@@ -83,7 +83,7 @@ export const ButtonUserConnected = () => {
           listSubMenuAccount().map((item, index) => {
             return (
               <li key={`account-sub-menu-${index}`}>
-                <button className="flex flex-row items-center gap-2" onClick={ () => handleClick(index)}>
+                <button className="flex flex-row items-center gap-2" onClick={() => handleClick(index)}>
                   {item.icon}
                   {item.name}
                 </button>
@@ -171,28 +171,46 @@ export const ButtonConnectWallet = () => {
 export const ModalAccount = () => {
   const { address } = useAccount()
   const { chain } = useNetwork();
-  
+
   const [history, setHistory] = useState<readonly IHistory[]>([]);
   const [loading, setLoading] = useState(false);
-
+  console.log(datas.listNetworkKey[chain?.name as keyof typeof datas.listNetworkKey], chain?.name)
   const networkData = dataContract.networkDetail[datas.listNetworkKey[chain?.name as keyof typeof datas.listNetworkKey] as keyof typeof dataContract.networkDetail];
-  const getHistory = useCallback(async () => {
-    setLoading(true)
-    const data = await readContract({
-      abi: ShieldHub__factory.abi,
-      address: networkData.ShieldHub as `0x${string}`,
-      functionName: "getUserFullInfo",
-      args: [address as `0x${string}`]
-    })
-    setHistory(data);
-    setLoading(false);
-  }, [address, networkData.ShieldHub])
-  
-  useEffect(() => {
-    getHistory()
-  }, [getHistory])
 
-  const convertStrikePrice = (v: bigint, i: number, m: string ) => {
+  const getHistory = useCallback(async () => {
+    try {
+      setLoading(true)
+      const data = await readContract({
+        abi: ShieldHub__factory.abi,
+        address: networkData.ShieldHub as `0x${string}`,
+        functionName: "getUserFullInfo",
+        args: [address as `0x${string}`]
+      })
+      setHistory(data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false)
+    }
+  }, [address, networkData?.ShieldHub])
+
+  const dialogRef = useRef(document.createElement('dialog'));
+
+  useEffect(() => {
+    const observer = new MutationObserver((mutations) => {
+      if (mutations.some((mutation) => mutation.attributeName === 'open')) {
+        if (dialogRef.current.open) {
+          getHistory()
+        }
+      }
+    });
+
+    observer.observe(dialogRef.current, { attributes: true });
+
+    return () => observer.disconnect();
+  }, [getHistory]);
+
+  const convertStrikePrice = (v: bigint, i: number, m: string) => {
+    console.log(i)
     const d = dataContract.dataFeed[i === 0 ? 'assets' : 'nft']
     const e = d[datas.listNetworkKey[chain?.name as keyof typeof datas.listNetworkKey] as keyof typeof d]
     const filterData = e.filter((item) => item.contractName === m)
@@ -201,7 +219,7 @@ export const ModalAccount = () => {
   }
 
   return (
-    <dialog id="modal_account" className="modal">
+    <dialog id="modal_account" className="modal" ref={dialogRef}>
       <div className="modal-box">
         <form method="dialog">
           <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
@@ -215,9 +233,9 @@ export const ModalAccount = () => {
             <div className="flex-1 flex flex-col gap-2">
               <div>{trimWallet(address as string)}</div>
               <div className="items-center gap-4 hidden md:flex">
-                <div className="badge badge-accent">Active ({ history.filter((item) => item.status === 0).length })</div>
-                <div className="badge badge-primary">Claimed ({ history.filter((item) => item.status === 1).length })</div>
-                <div className="badge badge-neutral">Expired ({ history.filter((item) => item.status === 2).length })</div>
+                <div className="badge badge-accent">Active ({history.filter((item) => item.status === 0).length})</div>
+                <div className="badge badge-primary">Claimed ({history.filter((item) => item.status === 1).length})</div>
+                <div className="badge badge-neutral">Expired ({history.filter((item) => item.status === 2).length})</div>
               </div>
             </div>
           </div>
@@ -237,23 +255,23 @@ export const ModalAccount = () => {
                   <div key={index} className="border-[1px] border-base-content/5 rounded-sm p-3 grid grid-cols-1 gap-2 text-sm">
                     <div className="flex items-center justify-between">
                       <div className="opacity-[0.5]">Assets Name</div>
-                      <div>{ item.market }</div>
+                      <div>{item.market}</div>
                     </div>
                     <div className="flex items-center justify-between">
-                      <div className="opacity-[0.5]">Strike Price</div>
-                      <div>{ convertStrikePrice(item.strikePrice, Number(item.iType), item.market) }</div>
+                      <div className="opacity-[0.5]">Strike Price in {Number(item.iType) === 0 ? 'USD' : 'ETH'}</div>
+                      <div>{convertStrikePrice(item.strikePrice, Number(item.iType), item.market)}</div>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="opacity-[0.5]">Premium Amount</div>
-                      <div>{ formatCurrency(item.amount, 18) }</div>
+                      <div>{formatCurrency(item.amount, 18)}</div>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="opacity-[0.5]">Cover Amount</div>
-                      <div>{ formatCurrency(item.coverAmount, 18) }</div>
+                      <div>{formatCurrency(item.coverAmount, 18)}</div>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="opacity-[0.5]">Expire Time</div>
-                      <div>{ moment(Number(item.expireTime) * 1000).format('llll')  }</div>
+                      <div>{moment(Number(item.expireTime) * 1000).format('llll')}</div>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="opacity-[0.5]">Status</div>
@@ -272,7 +290,7 @@ export const ModalAccount = () => {
               })
             }
             {
-              history.length === 0 && <div className="text-center text-sm">You dont have any insurance <br /> or try refresh the data with the button above.</div>
+              (history.length === 0 && !loading) && <div className="text-center text-sm">You dont have any insurance <br /> or try refresh the data with the button above.</div>
             }
           </div>
         </div>
