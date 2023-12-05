@@ -1,11 +1,27 @@
 'use client';
 
 import { Claims, Liquidity, Shield, Underwritten } from "@/components/Icons";
-import { listBenefit } from "@/helper";
-import { useState } from "react";
+import { getTotalCapital, getTotalClaimed, getTotalUnderCover, listBenefit } from "@/helper";
+import { useEffect, useState } from "react";
 import datas from '@/data.json';
+import Link from "next/link";
 
 export default function Home() {
+  const [totalCapital, setTotalCapital] = useState('0');
+  const [totalCover, setTotalCover] = useState('0');
+  const [totalClaimed, setTotalClaimed] = useState('0');
+
+  useEffect(() => {
+    const getData = async () => {
+      Promise.all([ getTotalCapital(), getTotalUnderCover(), getTotalClaimed()]).then((values) => {
+        setTotalCapital(values[0]);
+        setTotalCover(values[1]);
+        setTotalClaimed(values[2]);
+      })
+    }
+
+    getData();
+  }, [])
   return (
     <main>
       <section className="container mx-auto p-6">
@@ -22,29 +38,34 @@ export default function Home() {
             </div>
           </div>
           <div className="flex items-center justify-center gap-2">
-            <button className="btn btn-primary btn-sm">Launch App</button>
-            <button className="btn btn-link">Read more</button>
+            <Link href="/explore">
+              <button className="btn btn-primary btn-sm">Launch App</button>
+            </Link>
+            
+            <a href="https://github.com/akbaridria/cryptoshield#readme" target="_blank" rel="noopener noreferrer">
+              <button className="btn btn-link">Read more</button>
+            </a>
           </div>
           <div className="flex items-center justify-center mt-12">
             <div className="stats stats-vertical lg:stats-horizontal shadow w-[800px] max-w-full">
               <div className="stat">
                 <div className="stat-figure text-primary"><Liquidity customClass="w-8 h-8 stroke-primary" /></div>
                 <div className="stat-title">Total Liquidity</div>
-                <div className="stat-value text-primary">$31M</div>
+                <div className="stat-value text-primary">${ totalCapital }</div>
                 {/* <div className="stat-desc">Jan 1st - Feb 1st</div> */}
               </div>
 
               <div className="stat">
                 <div className="stat-figure text-secondary"><Underwritten customClass="w-8 h-8 stroke-secondary fill-secondary" /></div>
                 <div className="stat-title">Cover Underwritten</div>
-                <div className="stat-value text-secondary">$1M</div>
+                <div className="stat-value text-secondary">${ totalCover }</div>
                 {/* <div className="stat-desc">↗︎ 400 (22%)</div> */}
               </div>
 
               <div className="stat">
                 <div className="stat-figure text-primary"><Claims customClass="w-8 h-8 stroke-primary" /></div>
                 <div className="stat-title">Claims Paid</div>
-                <div className="stat-value text-primary">$12M</div>
+                <div className="stat-value text-primary">${ totalClaimed }</div>
                 {/* <div className="stat-desc">↘︎ 90 (14%)</div> */}
               </div>
             </div>

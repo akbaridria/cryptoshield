@@ -42,11 +42,9 @@ export const CardAsset = ({ image, name, chain, setMarket }: ICardAsset) => {
           functionName: "checkPrice",
           args: [name]
         });
-        console.log(dataPrice)
         setPrice(dataPrice);
         setLoading(false);
       } catch (error) {
-        console.log(error)
         setLoading(false);
       }
     }

@@ -146,7 +146,6 @@ export const ModalBuy = ({ price, assetType, decimal, market, setTx }: FormBuy) 
         ...prevState,
         loadingBuy: false
       }))
-      console.log(data.status)
       if (data.status === 'success') {
         if (!!setTx) {
           setTx(data.transactionHash);
@@ -157,7 +156,6 @@ export const ModalBuy = ({ price, assetType, decimal, market, setTx }: FormBuy) 
         alert("transation reverted!");
       }
     } catch (error) {
-      console.log(error)
       setLoading(prevState => ({
         ...prevState,
         loadingBuy: false

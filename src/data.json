@@ -11,6 +11,14 @@
     {
       "question": "How does Cryptoshield utilize Chainlink's oracle network?",
       "answer": "Chainlink's oracle network provides secure and reliable price feeds, enabling Cryptoshield to accurately assess market conditions and trigger insurance payouts accordingly."
+    },
+    {
+      "question": "How is the cover amount calculated in CryptoShield?",
+      "answer": "The cover amount in CryptoShield is determined using a specific formula: ((currentPrice - strikePrice) / currentPrice * 100 * premium) * 2). This formula takes into account the difference between the current asset price and the predefined strike price, multiplied by the premium percentage set by the user. The resulting value is then doubled to ascertain the cover amount, offering a clear and calculated approach to determine insurance coverage within the platform."
+    },
+    {
+      "question": "How does CryptoShield support NFT insurance?",
+      "answer": "CryptoShield extends its insurance coverage to NFTs by leveraging the floor price NFT data obtained from Chainlink price feeds. By utilizing this data, CryptoShield accurately assesses the market value of NFTs based on their floor prices"
     }
   ],
   "menus": [
@@ -23,14 +31,14 @@
       "link": "/explore"
     }
   ],
-  "listNetworkImage" : {
-    "Goerli" : "eth.svg",
-    "Polygon Mumbai" : "matic.svg",
-    "Avalanche Fuji" : "avax.svg"
+  "listNetworkImage": {
+    "Goerli": "eth.svg",
+    "Polygon Mumbai": "matic.svg",
+    "Avalanche Fuji": "avax.svg"
   },
-  "listNetworkKey" : {
-    "Goerli" : "ethereum",
-    "Polygon Mumbai" : "polygon",
-    "Avalanche Fuji" : "avalanche"
+  "listNetworkKey": {
+    "Goerli": "ethereum",
+    "Polygon Mumbai": "polygon",
+    "Avalanche Fuji": "avalanche"
   }
 }

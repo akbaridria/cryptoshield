@@ -7,6 +7,9 @@ import {
   ArrowDiagonalSquare,
   ArrowSquare
 } from "./components/Icons"
+import { DummyUsdc__factory, ShieldHub__factory } from "../protocol-contract/typechain-types";
+import datas from '../protocol-contract/datas/contracts.json';
+import { ethers } from "ethers";
 
 export const listBenefit = () : Menus[] => {
   return [
@@ -51,4 +54,40 @@ export const trimWallet = (v: string) => {
 
 export const formatCurrency = (v: bigint, decimal: number) => {
   return new Intl.NumberFormat('en',{ minimumFractionDigits: 0, maximumFractionDigits: decimal}).format(Number(v) / (10 ** decimal))
+}
+
+export const getTotalCapital = async () => {
+  let result = BigInt(0);
+
+  for(let i in Object.keys(datas.networkDetail)) {
+    const provider = new ethers.JsonRpcProvider(datas.networkDetail[Object.keys(datas.networkDetail)[i] as keyof typeof datas.networkDetail].rpc);
+    const d = DummyUsdc__factory.connect(datas.networkDetail[Object.keys(datas.networkDetail)[i] as keyof typeof datas.networkDetail].DummyUsdc, provider);
+    const e = await d.balanceOf(datas.networkDetail[Object.keys(datas.networkDetail)[i] as keyof typeof datas.networkDetail].ShieldHub);
+    result += e;
+  }
+  return new Intl.NumberFormat('en', { notation: 'compact'}).format( Number(result) / (10 ** 18));
+}
+
+export const getTotalUnderCover = async () => {
+  let result = BigInt(0);
+
+  for(let i in Object.keys(datas.networkDetail)) {
+    const provider = new ethers.JsonRpcProvider(datas.networkDetail[Object.keys(datas.networkDetail)[i] as keyof typeof datas.networkDetail].rpc);
+    const d = ShieldHub__factory.connect(datas.networkDetail[Object.keys(datas.networkDetail)[i] as keyof typeof datas.networkDetail].ShieldHub, provider);
+    const e = await d.totalUnrealizedCoverAmount();
+    result += e;
+  }
+  return new Intl.NumberFormat('en', { notation: 'compact'}).format( Number(result) / (10 ** 18));
+}
+
+export const getTotalClaimed = async () => {
+  let result = BigInt(0);
+
+  for(let i in Object.keys(datas.networkDetail)) {
+    const provider = new ethers.JsonRpcProvider(datas.networkDetail[Object.keys(datas.networkDetail)[i] as keyof typeof datas.networkDetail].rpc);
+    const d = ShieldHub__factory.connect(datas.networkDetail[Object.keys(datas.networkDetail)[i] as keyof typeof datas.networkDetail].ShieldHub, provider);
+    const e = await d.totalClaimed();
+    result += e;
+  }
+  return new Intl.NumberFormat('en', { notation: 'compact'}).format( Number(result) / (10 ** 18));
 }

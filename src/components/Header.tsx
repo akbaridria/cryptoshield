@@ -174,7 +174,7 @@ export const ModalAccount = () => {
 
   const [history, setHistory] = useState<readonly IHistory[]>([]);
   const [loading, setLoading] = useState(false);
-  console.log(datas.listNetworkKey[chain?.name as keyof typeof datas.listNetworkKey], chain?.name)
+  
   const networkData = dataContract.networkDetail[datas.listNetworkKey[chain?.name as keyof typeof datas.listNetworkKey] as keyof typeof dataContract.networkDetail];
 
   const getHistory = useCallback(async () => {
@@ -210,7 +210,6 @@ export const ModalAccount = () => {
   }, [getHistory]);
 
   const convertStrikePrice = (v: bigint, i: number, m: string) => {
-    console.log(i)
     const d = dataContract.dataFeed[i === 0 ? 'assets' : 'nft']
     const e = d[datas.listNetworkKey[chain?.name as keyof typeof datas.listNetworkKey] as keyof typeof d]
     const filterData = e.filter((item) => item.contractName === m)
