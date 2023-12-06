@@ -13,7 +13,7 @@ import { ModalBuy } from '@/module/explore/Modals/ModalBuy';
 import { ModalTxSuccess } from '@/module/explore/Modals/ModalTxSuccess';
 import { ModalFaucet } from '@/module/explore/Modals/ModalFaucet';
 
-export const Explore = () => {
+export default function Explore() {
   const tabs = ['Assets', 'NFTs'];
   const { chain } = useNetwork()
   const { isConnected } = useAccount()
@@ -114,4 +114,3 @@ export const Explore = () => {
     </div>
   )
 }
-export default Explore;
