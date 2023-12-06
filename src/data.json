@@ -19,6 +19,10 @@
     {
       "question": "How does CryptoShield support NFT insurance?",
       "answer": "CryptoShield extends its insurance coverage to NFTs by leveraging the floor price NFT data obtained from Chainlink price feeds. By utilizing this data, CryptoShield accurately assesses the market value of NFTs based on their floor prices"
+    },
+    {
+      "question": "What risks does CryptoShield cover?",
+      "answer": "CryptoShield is designed to protect against losses incurred due to market volatility when asset prices decrease. It's important to note that CryptoShield's coverage does not extend to scenarios like wallet hacks or non-market-related losses. The platform's focus is specifically on providing insurance against market downturns and price fluctuations, ensuring protection for your assets during such market movements."
     }
   ],
   "menus": [
