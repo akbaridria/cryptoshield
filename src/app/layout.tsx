@@ -10,6 +10,9 @@ const inter = DM_Sans({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'CryptoShield',
   description: 'Protect your asset and nft with the decentralized way',
+  icons: {
+    icon: './logo.png'
+  }
 }
 
 export default function RootLayout({
